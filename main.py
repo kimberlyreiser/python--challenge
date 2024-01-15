@@ -4,84 +4,90 @@ import os
 #Allow us to read csv file
 import csv
 
+# open(budget_data.csv)
 
-totalmonths = 0
-total = 0
-change = []
-profitloss=[]
-month= []
+#Dictionary to hold the canidiate votes 
+Canidate_votes = {}
 
-csvpath = os.path.join("Resources","budget_data.csv")
-txtpath = os.path.join("analysis","budget_analysis.txt")
+#Contain the total votes
+Ballot = []
 
+#Initalize count 
+Charles_Casper_Stockham = 0
+Raymon_Anthony_Doane = 0
+Diana_DeGette = 0
+
+
+output_path = os.path.join("analysis","election_result.txt")
+csvpath = os.path.join('Resources','election_data.csv')
 
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
     next(csvreader)
-
+    
 
     for csvrow in csvreader:
+            Ballot.append(csvrow[1])
+            votes = len(Ballot)
+    # print(votes)  
 
-    #Number of lines present
-        totalmonths+=1
-        #print(totalmonths)
+        #Add to count, if value is located in column [2]
+            if csvrow[2] == "Charles Casper Stockham":
+                Charles_Casper_Stockham += 1
+    #print(Charles_Casper_Stockham)
 
-    #Profit/Loss Net total 
-        total+=int(csvrow[1])
-        #print(total)
+            elif csvrow[2] == "Diana DeGette":
+                Diana_DeGette +=1
+    #print(Diana_DeGette)
 
-    #Append Date Column to new list
-        month.append(csvrow[0])
+            elif csvrow[2] == "Raymon Anthony Doane":
+                Raymon_Anthony_Doane +=1
+    #print(Raymon_Anthony_Doane)
 
-    #Append Row Column to new list
-        profitloss.append(int(csvrow[1])) 
+    #Canidate Calaulation
+    Canidate1 = round((Charles_Casper_Stockham/votes)*100,3)
+    Canidate2 = round((Diana_DeGette/votes)*100,3)
+    Canidate3 = round((Raymon_Anthony_Doane/votes)*100,3)
 
-    #Calculate the profit and loss differences 
-        change.append(profitloss[totalmonths-1]-profitloss[totalmonths-2])
-        # print(profitloss)
+    #Dictionary to hold the number of votes
+    Canidate_votes = {"Charles Casper Stockham": Charles_Casper_Stockham, "Diana DeGette": Diana_DeGette, "Raymon Anthony Doane": Raymon_Anthony_Doane }  
 
-    #Sum the difference
-    totalchange = sum(change)
+    Election_winner = max(Canidate_votes, key=Canidate_votes.get)
+    #print(Election_winner)   
 
-    #Calculate the average and dived by the total  rows **round to the second decimal place**
-    averagechange = round(totalchange/(len(change)-1), 2)
-    #print(averagechange)
-
-    #Greatest increase in profit
-    inc_profit = max(change)
-    grt_increase = change.index(inc_profit)
-  
-    
-    #Greatest decrease in profit
-    dec_profit = min(change)
-    grt_decrease = change.index(dec_profit)
-  
-    
 
 #Write to text file
 
-with open(txtpath, 'w') as outfile:
+with  open(output_path, 'w') as fileoutput:
+     
 
 
-    outfile.write("Financial Analysis\n")
-    outfile.write("----------------------------\n")
-    outfile.write(f"Total Months: {totalmonths}\n")
-    outfile.write(f"Total: ${total} \n")
-    outfile.write(f"Average Change: ${averagechange}\n")
-    outfile.write(f"Greatest Increase in Profits: {month[grt_increase]} (${inc_profit}) \n")
-    outfile.write(f"Dreatest Decrease in Profits: {month[grt_decrease]} (${ dec_profit})\n")
+    fileoutput.write("Election Results\n")
+    fileoutput.write("----------------------------\n")
+    fileoutput.write(f"Total Votes: {votes}\n")
+    fileoutput.write("----------------------------\n")
+    fileoutput.write(f"Charles Casper Stockham: {Canidate1}% ({Charles_Casper_Stockham})\n")
+    fileoutput.write(f"Diana DeGette: {Canidate2}% ({Diana_DeGette})\n")
+    fileoutput.write(f"Raymon Anthony Doane: {Canidate3}% ({Raymon_Anthony_Doane}) \n")
+    fileoutput.write("----------------------------\n")
+    fileoutput.write(f"Winner: {Election_winner}\n")
 
-
-
-    print("Financial Analysis\n")
+    print("Election Results\n")
     print("----------------------------\n")
-    print(f"Total Months: {totalmonths}\n")
-    print(f"Total: ${total} \n")
-    print(f"Average Change: ${averagechange}\n")
-    print(f"Greatest Increase in Profits: {month[grt_increase]} (${inc_profit}) \n")
-    print(f"Dreatest Decrease in Profits: {month[grt_decrease]} (${ dec_profit})\n")
+    print(f"Total Votes: {votes}\n")
+    print("----------------------------\n")
+    print(f"Charles Casper Stockham: {Canidate1}% ({Charles_Casper_Stockham})\n")
+    print(f"Diana DeGette: {Canidate2}% ({Diana_DeGette})\n")
+    print(f"Raymon Anthony Doane: {Canidate3}% ({Raymon_Anthony_Doane}) \n")
+    print("----------------------------\n")
+    print(f"Winner: {Election_winner}\n")
+
+
+
+    
    
 
 
 
-
+    
+    
